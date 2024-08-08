@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Neighborhood Walk</title>
+    <script
+      type="module"
+      src="https://unpkg.com/playhtml@latest/dist/init.es.js"
+    ></script>
+    <link rel="stylesheet" href="https://unpkg.com/playhtml/dist/style.css" />
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #87ceeb;
+      }
+      #neighborhood {
+        width: 800px;
+        height: 600px;
+        position: relative;
+        background-color: #7cfc00;
+        margin: 20px auto;
+        overflow: hidden;
+      }
+      .house {
+        width: 100px;
+        height: 100px;
+        background-color: #8b4513;
+        position: absolute;
+      }
+      #character {
+        width: 20px;
+        height: 20px;
+        background-color: #ff0000;
+        position: absolute;
+        transition: all 0.1s;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="neighborhood">
+      <div class="house" style="top: 50px; left: 100px"></div>
+      <div class="house" style="top: 200px; left: 300px"></div>
+      <div class="house" style="top: 400px; left: 600px"></div>
+      <div id="character" can-play></div>
+    </div>
+
+    <script>
+      const character = document.getElementById("character");
+      character.defaultData = { x: 400, y: 300 };
+
+      character.updateElement = ({ data, element }) => {
+        element.style.left = data.x + "px";
+        element.style.top = data.y + "px";
+      };
+
+      character.onMount = ({ getData, setData }) => {
+        document.addEventListener("keydown", (event) => {
+          const { x, y } = getData();
+          let newX = x;
+          let newY = y;
+
+          switch (event.key) {
+            case "ArrowUp":
+              newY = Math.max(0, y - 10);
+              break;
+            case "ArrowDown":
+              newY = Math.min(580, y + 10);
+              break;
+            case "ArrowLeft":
+              newX = Math.max(0, x - 10);
+              break;
+            case "ArrowRight":
+              newX = Math.min(780, x + 10);
+              break;
+          }
+
+          if (newX !== x || newY !== y) {
+            setData({ x: newX, y: newY });
+          }
+        });
+      };
+
+      character.resetShortcut = "shiftKey";
+    </script>
+
+    <!-- Import playhtml -->
+    <script type="module">
+      import "https://unpkg.com/playhtml@latest";
+      playhtml.init();
+    </script>
+  </body>
+</html>
